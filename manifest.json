@@ -33,7 +33,7 @@
     },
     "mixel": {
       "description": "Spatial smoothness for mixeltype; default=0.3",
-      "default": 0.03,
+      "default": 0.3,
       "type": "number",
       "id": "-R"
     },
