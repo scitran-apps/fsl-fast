@@ -14,7 +14,7 @@
   },
   "config": {
     "image_type": {
-      "description": "Type of image (n=1 for T1, n=2 for T2, n=3 for PD). [DEFAULT=1, T1]. This aids the segmentation in identifying which classes are which tissue type. Note that this option is not used for multi-channel segmentation.",
+      "description": "Type of image (1 for T1, 2 for T2, 3 for PD). This aids the segmentation in identifying which classes are which tissue type. Note that this option is not used for multi-channel segmentation. [1 = T1, 2 = T2, 3 = PD. DEFAULT = 1]",
       "default": 1,
       "minimum": 1,
       "maximum": 3,
@@ -22,7 +22,7 @@
       "id": "-t"
     },
     "tissue_classes": {
-      "description": "Number of tissue classes to be segmented. Normally you will want 3 (Grey Matter, White Matter and CSF). However, if there is very poor grey/white contrast you may want to reduce this to 2; alternatively, if there are strong lesions showing up as a fourth class, you may want to increase this. Also, if you are segmenting T2-weighted images, you may need to select 4 classes so that dark non-brain matter is processed correctly (this is not a problem with T1-weighted as CSF and dark non-brain matter look similar).",
+      "description": "Number of tissue classes to be segmented. Normally you will want 3 (Grey Matter, White Matter and CSF). However, if there is very poor grey/white contrast you may want to reduce this to 2; alternatively, if there are strong lesions showing up as a fourth class, you may want to increase this. Also, if you are segmenting T2-weighted images, you may need to select 4 classes so that dark non-brain matter is processed correctly (this is not a problem with T1-weighted as CSF and dark non-brain matter look similar). [DEFAULT = 3]",
       "default": 3,
       "minimum": 1,
       "maximum": 4,
@@ -30,19 +30,19 @@
       "id": "-n"
     },
     "channels": {
-      "description": "Number number of image channels. [DEFAULT=1]",
+      "description": "Number number of image channels. [DEFAULT = 1]",
       "default": 1,
       "type": "integer",
       "id": "-S"
     },
     "bias_field": {
-      "description": "Output estimated bias field.",
+      "description": "Output estimated bias field. [true/false. DEFAULT = false]",
       "default": false,
       "type": "boolean",
       "id": "-b"
     },
     "restored_image": {
-      "description": "Output restored image (bias-corrected image).",
+      "description": "Output restored image (bias-corrected image). [true/false. DEFAULT = false]",
       "default": false,
       "type": "boolean",
       "id": "-B"
