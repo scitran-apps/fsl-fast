@@ -1,0 +1,108 @@
+#! /bin/bash
+#
+#
+
+CONTAINER="[scitran/fsl-fast]"
+
+# Built to flywheel-v0 spec.
+FLYWHEEL_BASE=/flywheel/v0
+
+# Configure the ENV
+chmod +x /etc/fsl/5.0/fsl.sh
+source /etc/fsl/5.0/fsl.sh
+
+OUTPUT_DIR=$FLYWHEEL_BASE/output
+INPUT_DIR=$FLYWHEEL_BASE/input/nifti
+MANIFEST=$FLYWHEEL_BASE/manifest.json
+CONFIG_FILE=$FLYWHEEL_BASE/config.json
+
+echo -e "$CONTAINER  Initiated"
+
+if [[ ! -d "$OUTPUT_DIR" ]] || [[ ! -d "$INPUT_DIR" ]]
+    then
+        echo "$CONTAINER  $OUTPUT_DIR not found!"
+        exit 1
+fi
+
+# Initialize config parameters
+tissue_classes=' '
+bias_field=' '
+restored_image=' '
+image_type=' '
+
+
+# Generate flags from the manifest
+tissue_classes_flag=$(jq -r <$MANIFEST '''.config.tissue_classes.id')
+bias_field_flag=$(jq -r <$MANIFEST '''.config.bias_field.id')
+restored_image_flag=$(jq -r <$MANIFEST '''.config.restored_image.id')
+image_type_flag=$(jq -r <$MANIFEST '''.config.image_type.id')
+channels_flag=$(jq -r <$MANIFEST '''.config.channels.id')
+
+
+# Parse config options from CONFIG file or MANIFEST
+if [[ -f $CONFIG_FILE ]]; then
+  echo "$CONFIG_FILE found. Loading config..."
+
+  tissue_classes="$tissue_classes_flag $(jq -r <$CONFIG_FILE '''.config.tissue_classes')"
+
+  channels="$channels_flag $(jq -r <$CONFIG_FILE '''.config.channels')"
+
+  image_type="$image_type_flag  $(jq -r <$CONFIG_FILE '''.config.image_type')"
+
+  if [[ $(jq -r <$CONFIG_FILE '''.config.bias_field') == 'true' ]]; then
+    bias_field=$bias_field_flag
+  fi
+
+  if [[ $(jq -r <$CONFIG_FILE '''.config.restored_image') == 'true' ]]; then
+    restored_image=$restored_image_flag
+  fi
+
+else
+  echo "$CONFIG_FILE not found. Loading defaults from $MANIFEST..."
+
+  tissue_classes="$tissue_classes_flag $(jq -r <$MANIFEST '''.config.tissue_classes.default')"
+
+  channels="$channels_flag $(jq -r <$MANIFEST '''.config.channels.default')"
+
+  image_type="$image_type_flag $(jq -r <$MANIFEST '''.config.image_type.default')"
+
+  if [[ $(jq -r <$MANIFEST '''.config.bias_field.default') == 'true' ]]; then
+    bias_field=$bias_field_flag
+  fi
+
+  if [[ $(jq -r <$MANIFEST '''.config.restored_image.default') == 'true' ]]; then
+    restored_image=$restored_image_flag
+  fi
+
+fi
+
+# Compile options string
+OPTIONS="$channels $image_type $restored_image $tissue_classes $bias_field"
+
+# Check if the inputs are empty. We will want the parameters passed in.
+input_file=`find $INPUT_DIR/* -maxdepth 0 -not -path '*/\.*' -type f -name "*.nii*" | head -1`
+if [[ -n $input_file ]]
+  then
+      echo "$CONTAINER  Running FAST on `basename "$input_file"`"
+      output_file_base=$OUTPUT_DIR/`basename "$input_file" .nii.gz`_fast
+      fast ${OPTIONS} -o "$output_file_base" "$input_file"
+else
+      echo "$CONTAINER  No inputs were provided and $INPUT_DIR has no valid input files!"
+      exit 1
+fi
+
+
+# Get a list of the files in the output directory (written with the output basename)
+outputs=$(find $OUTPUT_DIR/* -maxdepth 0 -type f -name "`basename "$output_file_base"`*")
+
+
+# If outputs exist, compress and exit
+if [[ -z $outputs ]]
+    then
+        echo "$CONTAINER  No results found in output directory... Exiting"
+        exit 1
+    else
+        echo -e "$CONTAINER  Done!"
+fi
+
+exit 0
