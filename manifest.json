@@ -13,6 +13,66 @@
     "docker-image": "scitran/fsl-fast:v0.1"
   },
   "config": {
+    "nobias": {
+      "description": "Do not remove bias field; default=false",
+      "default": false,
+      "type": "boolean",
+      "id": "-N"
+    },
+    "nopve": {
+      "description": "Turn off PVE (partial volume estimation); default=false",
+      "default": false,
+      "type": "boolean",
+      "id": "--nopve"
+    },
+    "segments": {
+      "description": "Outputs a separate binary image for each tissue type; Boolean, default=false",
+      "default": false,
+      "type": "boolean",
+      "id": "-g"
+    },
+    "mixel": {
+      "description": "Spatial smoothness for mixeltype; default=0.3",
+      "default": 0.03,
+      "type": "number",
+      "id": "-R"
+    },
+    "fHard": {
+      "description": "Initial segmentation spatial smoothness (during bias field estimation); default=0.02",
+      "default": 0.02,
+      "type": "number",
+      "id": "-f"
+    },
+    "Hyper": {
+      "description": "Segmentation spatial smoothness; default=0.1",
+      "default": 0.1,
+      "type": "number",
+      "id": "-H"
+    },
+    "init": {
+      "description": "Number of segmentation-initialisation iterations; default=15",
+      "default": 15,
+      "type": "integer",
+      "id": "-W"
+    },
+    "fixed": {
+      "description": "Number of main-loop iterations after bias-field removal; default=4",
+      "default": 4,
+      "type": "integer",
+      "id": "-O"
+    },
+    "lowpass": {
+      "description": "Bias field smoothing extent (FWHM) in mm; default=20",
+      "default": 20,
+      "type": "integer",
+      "id": "-I"
+    },
+    "iterations": {
+      "description": "Number of main-loop iterations during bias-field removal; default=4",
+      "default": 4,
+      "type": "integer",
+      "id": "-I"
+    },
     "image_type": {
       "description": "Type of image (1 for T1, 2 for T2, 3 for PD). This aids the segmentation in identifying which classes are which tissue type. Note that this option is not used for multi-channel segmentation. [1 = T1, 2 = T2, 3 = PD. DEFAULT = 1]",
       "default": 1,

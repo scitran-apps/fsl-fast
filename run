@@ -6,6 +6,7 @@ CONTAINER="[scitran/fsl-fast]"
 echo -e "$CONTAINER  Initiated"
 
 
+###############################################################################
 # Built to flywheel-v0 spec.
 FLYWHEEL_BASE=/flywheel/v0
 OUTPUT_DIR=$FLYWHEEL_BASE/output
@@ -14,65 +15,127 @@ MANIFEST=$FLYWHEEL_BASE/manifest.json
 CONFIG_FILE=$FLYWHEEL_BASE/config.json
 
 
+###############################################################################
 # Configure the ENV
 chmod +x /etc/fsl/5.0/fsl.sh
 source /etc/fsl/5.0/fsl.sh
 
 
+###############################################################################
 # Initialize config parameters
 tissue_classes=' '
 bias_field=' '
 restored_image=' '
 image_type=' '
+channels=' '
+nobias=' '
+nopve=' '
+segments=' '
+mixel=' '
+fHard=' '
+Hyper=' '
+init=' '
+fixed=' '
+lowpass=' '
+iterations=' '
 
-
+###############################################################################
 # Generate flags from the manifest
+
 tissue_classes_flag=$(jq -r <$MANIFEST '''.config.tissue_classes.id')
 bias_field_flag=$(jq -r <$MANIFEST '''.config.bias_field.id')
 restored_image_flag=$(jq -r <$MANIFEST '''.config.restored_image.id')
 image_type_flag=$(jq -r <$MANIFEST '''.config.image_type.id')
 channels_flag=$(jq -r <$MANIFEST '''.config.channels.id')
+nobias_flag=$(jq -r <$MANIFEST '''.config.nobias.id')
+nopve_flag=$(jq -r <$MANIFEST '''.config.nopve.id')
+segments_flag=$(jq -r <$MANIFEST '''.config.segments.id')
+mixel_flag=$(jq -r <$MANIFEST '''.config.mixel.id')
+fHard_flag=$(jq -r <$MANIFEST '''.config.fHard.id')
+Hyper_flag=$(jq -r <$MANIFEST '''.config.Hyper.id')
+init_flag=$(jq -r <$MANIFEST '''.config.init.id')
+fixed_flag=$(jq -r <$MANIFEST '''.config.fixed.id')
+lowpass_flag=$(jq -r <$MANIFEST '''.config.lowpass.id')
+iterations_flag=$(jq -r <$MANIFEST '''.config.iterations.id')
 
 
+###############################################################################
 # Parse config options from CONFIG file or MANIFEST
+
 if [[ -f $CONFIG_FILE ]]; then
   echo "$CONFIG_FILE found. Loading config..."
 
-  tissue_classes="$tissue_classes_flag $(jq -r <$CONFIG_FILE '''.config.tissue_classes')"
-  channels="$channels_flag $(jq -r <$CONFIG_FILE '''.config.channels')"
-  image_type="$image_type_flag  $(jq -r <$CONFIG_FILE '''.config.image_type')"
-
+  # Boolean parsing
   if [[ $(jq -r <$CONFIG_FILE '''.config.bias_field') == 'true' ]]; then
     bias_field=$bias_field_flag
   fi
-
   if [[ $(jq -r <$CONFIG_FILE '''.config.restored_image') == 'true' ]]; then
     restored_image=$restored_image_flag
   fi
+  if [[ $(jq -r <$CONFIG_FILE '''.config.nobias') == 'true' ]]; then
+    nobias=$nobias_flag
+  fi
+  if [[ $(jq -r <$CONFIG_FILE '''.config.nopve') == 'true' ]]; then
+    nopve=$nopve_flag
+  fi
+  if [[ $(jq -r <$CONFIG_FILE '''.config.segments') == 'true' ]]; then
+    segments=$segments_flag
+  fi
+
+  # Value parsing
+  tissue_classes="$tissue_classes_flag $(jq -r <$CONFIG_FILE '''.config.tissue_classes')"
+  channels="$channels_flag $(jq -r <$CONFIG_FILE '''.config.channels')"
+  image_type="$image_type_flag  $(jq -r <$CONFIG_FILE '''.config.image_type')"
+  mixel="$mixel_flag  $(jq -r <$CONFIG_FILE '''.config.mixel')"
+  fHard="$fHard_flag  $(jq -r <$CONFIG_FILE '''.config.fHard')"
+  Hyper="$Hyper_flag  $(jq -r <$CONFIG_FILE '''.config.Hyper')"
+  init="$init_flag  $(jq -r <$CONFIG_FILE '''.config.init')"
+  fixed="$fixed_flag  $(jq -r <$CONFIG_FILE '''.config.fixed')"
+  lowpass="$lowpass_flag  $(jq -r <$CONFIG_FILE '''.config.lowpass')"
+  iterations="$iterations_flag  $(jq -r <$CONFIG_FILE '''.config.iterations')"
 
 else
   echo "$CONFIG_FILE not found. Loading defaults from $MANIFEST..."
 
-  tissue_classes="$tissue_classes_flag $(jq -r <$MANIFEST '''.config.tissue_classes.default')"
-  channels="$channels_flag $(jq -r <$MANIFEST '''.config.channels.default')"
-  image_type="$image_type_flag $(jq -r <$MANIFEST '''.config.image_type.default')"
-
+  # Boolean parsing
   if [[ $(jq -r <$MANIFEST '''.config.bias_field.default') == 'true' ]]; then
     bias_field=$bias_field_flag
   fi
-
   if [[ $(jq -r <$MANIFEST '''.config.restored_image.default') == 'true' ]]; then
     restored_image=$restored_image_flag
   fi
+  if [[ $(jq -r <$MANIFEST '''.config.nobias.default') == 'true' ]]; then
+    nobias=$nobias_flag
+  fi
+  if [[ $(jq -r <$MANIFEST '''.config.nopve.default') == 'true' ]]; then
+    nopve=$nopve_flag
+  fi
+  if [[ $(jq -r <$MANIFEST '''.config.segments.default') == 'true' ]]; then
+    segments=$segments_flag
+  fi
 
-fi
+  # Value parsing
+  tissue_classes="$tissue_classes_flag $(jq -r <$MANIFEST '''.config.tissue_classes.default')"
+  channels="$channels_flag $(jq -r <$MANIFEST '''.config.channels.default')"
+  image_type="$image_type_flag  $(jq -r <$MANIFEST '''.config.image_type.default')"
+  mixel="$mixel_flag  $(jq -r <$MANIFEST '''.config.mixel.default')"
+  fHard="$fHard_flag  $(jq -r <$MANIFEST '''.config.fHard.default')"
+  Hyper="$Hyper_flag  $(jq -r <$MANIFEST '''.config.Hyper.default')"
+  init="$init_flag  $(jq -r <$MANIFEST '''.config.init.default')"
+  fixed="$fixed_flag  $(jq -r <$MANIFEST '''.config.fixed.default')"
+  lowpass="$lowpass_flag  $(jq -r <$MANIFEST '''.config.lowpass.default')"
+  iterations="$iterations_flag  $(jq -r <$MANIFEST '''.config.iterations.default')"
 
 
+###############################################################################
 # Compile options string
-OPTIONS="$channels $image_type $restored_image $tissue_classes $bias_field"
+
+OPTIONS="$nobias $nopve $segments $mixel $fHard $Hyper $init $fixed $lowpass $iterations $channels $image_type $restored_image $tissue_classes $bias_field"
 
 
+###############################################################################
 # RUN the FAST Algorithm
+
 input_file=`find $INPUT_DIR/* -maxdepth 0 -not -path '*/\.*' -type f -name "*.nii*" | head -1`
 if [[ -n $input_file ]]
   then
@@ -85,7 +148,9 @@ else
 fi
 
 
+###############################################################################
 # Get a list of the files in the output directory (written with the output basename)
+
 outputs=$(find $OUTPUT_DIR/* -maxdepth 0 -type f -name "`basename "$output_file_base"`*")
 
 
