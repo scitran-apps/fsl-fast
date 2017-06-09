@@ -5,7 +5,7 @@
   "maintainer": "Michael Perry <lmperry@stanford.edu>",
   "author": "Analysis Group, FMRIB, Oxford, UK.",
   "url": "http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FAST",
-  "source": "https://github.com/scitran/apps/analysis/fsl-fast",
+  "source": "https://github.com/scitran-apps/fsl-fast",
   "license": "Apache-2.0",
   "flywheel": "0",
   "version": "0.1",
