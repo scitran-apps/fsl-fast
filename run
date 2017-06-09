@@ -85,7 +85,7 @@ if [[ -n $input_file ]]
   then
       echo "$CONTAINER  Running FAST on `basename "$input_file"`"
       output_file_base=$OUTPUT_DIR/`basename "$input_file" .nii.gz`_fast
-      fast ${OPTIONS} -o "$output_file_base" "$input_file"
+      fast ${OPTIONS} -o "$output_file_base" -v "$input_file"
 else
       echo "$CONTAINER  No inputs were provided and $INPUT_DIR has no valid input files!"
       exit 1
