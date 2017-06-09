@@ -125,7 +125,7 @@ else
   fixed="$fixed_flag  $(jq -r <$MANIFEST '''.config.fixed.default')"
   lowpass="$lowpass_flag  $(jq -r <$MANIFEST '''.config.lowpass.default')"
   iterations="$iterations_flag  $(jq -r <$MANIFEST '''.config.iterations.default')"
-
+fi
 
 ###############################################################################
 # Compile options string
@@ -142,7 +142,7 @@ if [[ -n $input_file ]]
       echo "$CONTAINER  Running FAST on `basename "$input_file"`"
       output_file_base=$OUTPUT_DIR/`basename "$input_file" .nii.gz`_fast
       fast ${OPTIONS} -o "$output_file_base" -v "$input_file"
-else
+  else
       echo "$CONTAINER  INPUT_DIR has no valid input files!"
       exit 1
 fi
@@ -156,11 +156,11 @@ outputs=$(find $OUTPUT_DIR/* -maxdepth 0 -type f -name "`basename "$output_file_
 
 # If outputs exist, compress and exit
 if [[ -z $outputs ]]
-    then
-        echo "$CONTAINER  No results found in output directory... Exiting"
-        exit 1
-    else
-        echo -e "$CONTAINER  Done!"
+  then
+      echo "$CONTAINER  No results found in output directory... Exiting"
+      exit 1
+  else
+      echo -e "$CONTAINER  Done!"
 fi
 
 exit 0
