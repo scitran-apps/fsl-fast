@@ -1,32 +1,11 @@
-## scitran/fsl-fast
+# scitran/fsl-fast
+[![Docker Pulls](https://img.shields.io/docker/pulls/scitran/fsl-bet.svg)](https://hub.docker.com/r/scitran/fsl-fast/)
+[![Docker Stars](https://img.shields.io/docker/stars/scitran/fsl-bet.svg)](https://hub.docker.com/r/scitran/fsl-fast/)
 
-This dockerfile will create a FSL (v5.0) docker image that executes fast
+Build context for a [Flywheel Gear](https://github.com/flywheel-io/gears/tree/master/spec) which runs FSL's [FAST](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FAST).
 
+ FMRIB's Automated Segmentation Tool (FAST) segments a 3D image of the brain into different tissue types (Grey Matter, White Matter, CSF, etc.), whilst also correcting for spatial intensity variations (also known as bias field or RF inhomogeneities). The underlying method is based on a hidden Markov random field model and an associated Expectation-Maximization algorithm. The whole process is fully automated and can also produce a bias field-corrected input image and a probabilistic and/or partial volume tissue segmentation. It is robust and reliable, compared to most finite mixture model-based methods, which are sensitive to noise.
 
-### Build the Image
-To build the image, either download the files from this repo or clone the repo:
-```
-git clone https://github.com/scitran-apps/fsl-bet
-cd fsl-bet
-docker build -t scitran/fsl-bet
-```
+If you use FAST in your research, please quote the article:
 
-### Example Usage ###
-To run ```fast``` from this image you can do the following:
-```
-docker run --rm -ti \
-    -v </path/to/input/data>:/flyweel/v0/input/nifti \
-    -v </path/to/output>:/flywheel/v0/output \
-    scitran/fsl-fast -o /flywheel/v0/output/fast /flywheel/v0/input/nifti/<t1_file.nii.gz>
-```
-* Note that the directory mounted at "/flywheel/v0/output" must be EMPTY for the algorithm to run.
-* Note that if you put your input file in properly mounted directories, no inputs are required for the algorithm to run - as below
-
-
-```
-# If <t1_file.nii.gz> exists in </path/to/input/data>, then the following will work and produce a compressed output file </path/to/output>:
-docker run --rm -ti \
-    -v </path/to/input/data>:/flyweel/v0/input/nifti \
-    -v </path/to/output>:/flywheel/v0/output \
-    scitran/fsl-fast
-```
+> Zhang, Y. and Brady, M. and Smith, S. Segmentation of brain MR images through a hidden Markov random field model and the expectation-maximization algorithm. IEEE Trans Med Imag, 20(1):45-57, 2001.

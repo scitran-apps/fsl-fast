@@ -1,17 +1,10 @@
-# Create a base docker container that will run fsl's fast
+# Create a Flywheel Gear that will run FSL's fast
 #
-# Example usage:
-#    docker run --rm -ti \
-#       -v </path/to/input/data>:/flyweel/v0/input/nifti \
-#       -v </path/to/output>:/flywheel/v0/output \
-#       scitran/fsl-fast /flywheel/v0/input/<t1_file.nii.gz>
-
 
 FROM neurodebian:trusty
-
 MAINTAINER Michael Perry <lmperry@stanford.edu>
 
-
+# Neurodeb sources
 RUN echo deb http://neurodeb.pirsquared.org data main contrib non-free >> /etc/apt/sources.list.d/neurodebian.sources.list
 RUN echo deb http://neurodeb.pirsquared.org trusty main contrib non-free >> /etc/apt/sources.list.d/neurodebian.sources.list
 
