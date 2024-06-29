@@ -5,13 +5,36 @@
   "maintainer": "Michael Perry <lmperry@stanford.edu>",
   "author": "Analysis Group, FMRIB, Oxford, UK.",
   "cite": "Zhang, Y. and Brady, M. and Smith, S. Segmentation of brain MR images through a hidden Markov random field model and the expectation-maximization algorithm. IEEE Trans Med Imag, 20(1):45-57, 2001.",
-  "url": "http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FAST",
-  "source": "https://github.com/scitran-apps/fsl-fast",
+  "url": "https://github.com/scitran-apps/fsl-fast",
+  "source": "http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FAST",
   "license": "Apache-2.0",
   "flywheel": "0",
   "version": "0.1.1",
   "custom": {
-    "docker-image": "scitran/fsl-fast:v0.1.1"
+    "docker-image": "scitran/fsl-fast:v0.1.1",
+    "gear-builder": {
+      "category": "analysis"
+    },
+    "flywheel": {
+      "classification": {
+        "species": [
+          "Human"
+        ],
+        "organ": [
+          "Brain"
+        ],
+        "therapeutic_area": [
+          "Neurology"
+        ],
+        "modality": [
+          "MR"
+        ],
+        "function": [
+          "Image Processing - Segmentation"
+        ]
+      },
+      "suite": "Image Processing"
+    }
   },
   "config": {
     "nobias": {
@@ -121,3 +144,4 @@
     }
   }
 }
+
