@@ -11,9 +11,9 @@
   "flywheel": "0",
   "version": "0.1.1",
   "custom": {
-    "docker-image": "scitran/fsl-fast:v0.1.1",
     "gear-builder": {
-      "category": "analysis"
+      "category": "analysis",
+      "docker-image": "scitran/fsl-fast:v0.1.1"
     },
     "flywheel": {
       "classification": {
